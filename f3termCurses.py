@@ -439,7 +439,7 @@ def hackScreen():
                     i += 1
                 r = random.randint(1,10)
                 if r > 1:   # 9 из 10 случаев - удаляем слово
-                    (dPos, wList, fullstr) = delRandomWord(wList, fullStr)
+                    (dPos, wList, fullStr) = delRandomWord(wList, fullStr)
                     i = dPos
                     while i < dPos + db_parameters['wordLength']:
                         (dlX, dlY) = getStrCoords(i)
