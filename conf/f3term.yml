@@ -1,0 +1,19 @@
+attempts: 4
+deltaX: 2
+deltaY: 1
+hackHeader: hackScreen.txt
+isHacked: false
+isLocked: false
+isPowerOn: false
+lockHeader: lockScreen.txt
+lockTimeOut: 30
+mainHeader: readScreen.txt
+menuHeader: menuScreen.txt
+startHeader: startScreen.txt
+textMenu:
+  "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C E189FC":
+    name: f3Doc.txt
+    type: text
+unPowerHeader: powerScreen.txt
+wordLength: 8
+wordsPrinted: 16
