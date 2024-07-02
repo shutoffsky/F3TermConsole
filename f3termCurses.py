@@ -52,7 +52,6 @@ class f3_term_curses:
             self.main_conf['db_updated'] = False
         return(False)
 
-    @staticmethod
     def millis(self):
         return (time.time() - self.main_conf['start_time']) * 1000.0
 
@@ -138,6 +137,7 @@ class f3_term_curses:
         sel_word = word_str[start_pos:end_pos+1]
         return (sel_word, start_pos, end_pos)
 
+    @staticmethod
     def check_cheat_position(char_index, word_str):
         left_par = ['[', '(', '{', '<']
         right_par = [']', ')', '}', '>']
@@ -598,13 +598,13 @@ class f3_term_curses:
             return
         max_len = 0
         rows = 0
-        for menu_item in self.db_parameters['textMenu'].key_s():
+        for menu_item in self.db_parameters['textMenu'].keys():
             if max_len < len(menu_item):
                 max_len = len(menu_item)
             rows += 1
         y = int((21 - rows * 2) / 2)
         x = int((80 - max_len)/2)
-        for menu_item in self.db_parameters['textMenu'].key_s():
+        for menu_item in self.db_parameters['textMenu'].keys():
             menu_main_win.addstr(y, x, menu_item, curses.color_pair(1) | curses.A_BOLD)
             menu_sel.append(menu_item)
             y += 2
