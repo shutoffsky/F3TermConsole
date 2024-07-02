@@ -52,9 +52,6 @@ class f3_term_curses:
             self.main_conf['db_updated'] = False
         return(False)
 
-    def millis(self):
-        return (time.time() - self.main_conf['start_time']) * 1000.0
-
     @staticmethod
     def init_curses():
         curses.initscr()
@@ -368,9 +365,9 @@ class f3_term_curses:
         hack_main_win.keypad(True)
         word_flag = False
         cheat_flag = False
-        mss_time = self.millis()
+        mss_time = int(time.monotonic_ns()/1000000)
         while True:         # Основной цикл
-            msc_time = self.millis()
+            msc_time = int(time.monotonic_ns()/1000000)
             if (msc_time >= (mss_time + 3000)):
                 mss_time = msc_time
                 # Читаем базу
@@ -555,9 +552,9 @@ class f3_term_curses:
         read_serv_win.nodelay(False)
         read_serv_win.keypad(True)
         row_pos = 0
-        mss_time = self.millis()
+        mss_time = int(time.monotonic_ns()/1000000)
         while True:
-            msc_time = self.millis()
+            msc_time = int(time.monotonic_ns()/1000000)
             if (msc_time >= (mss_time + 3000)):
                 mss_time = msc_time
                 # Читаем базу
@@ -665,7 +662,7 @@ class f3_term_curses:
                 pass
             self.update_DB_parameters()
             if self.main_conf['lockTimeOutStart']!=0:
-                if (self.millis()-self.main_conf['lockTimeOutStart']) >= self.db_parameters["lockTimeOut"]*1000:
+                if (int(time.monotonic_ns()/1000000)-self.main_conf['lockTimeOutStart']) >= self.db_parameters["lockTimeOut"]*1000:
                     self.main_conf['lockTimeOutStart'] = 0
                     self.db_parameters["isLocked"] = False
                     self.update_DB_parameters()
@@ -677,7 +674,7 @@ class f3_term_curses:
                 time.sleep(self.main_conf['dbCheckInterval'])
             elif self.db_parameters["isLocked"]:
                 if self.main_conf['previousState'] != "Locked":
-                    self.main_conf['lockTimeOutStart'] = self.millis()
+                    self.main_conf['lockTimeOutStart'] = int(time.monotonic_ns()/1000000)
                     self.main_conf['previousState'] = "Locked"
                     self.out_screen('lockHeader', 0)
                     self.update_DB_parameters()
