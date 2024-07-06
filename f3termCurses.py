@@ -9,6 +9,7 @@ import string
 import threading
 import codecs
 import os
+import sys
 import paho.mqtt.client as mqtt
 import socket
 # import netifaces
@@ -80,7 +81,7 @@ class f3_term_curses:
         try:
             self.main_conf['is_db_updating'] = True
             with codecs.open(self.main_conf['conf_path'] + self.main_conf['conf_name'], 'w', 'utf-8') as f:
-                yaml.dump(self.db_parameters, f, sort_keys=False) 
+                yaml.dump(self.db_parameters, f, sort_keys=False, allow_unicode=True) 
         except Exception as err:
             pass
         finally:
@@ -430,11 +431,17 @@ class f3_term_curses:
                                 x_s += 1
                             hack_serv_win.refresh()
                             hack_main_win.move(y, x)
-                        else:   # Блокировка
-                            self.db_parameters["isLocked"] = True
-                            self.update_DB_parameters()
-                            time.sleep(1)
-                            return
+                        else:   # Взлом не удался
+                            if self.db_parameters['onFailure']['type'] == 'lock':
+                                self.db_parameters["isLocked"] = True
+                                self.update_DB_parameters()
+                                time.sleep(1)
+                                return
+                            elif self.db_parameters['onFailure']['type'] == 'exit':
+                                self.main_conf['forceClose'] = True
+                                sys.exit()
+                            elif self.db_parameters['onFailure']['type'] == 'command':
+                                os.system(self.db_parameters['onFailure']['name'])
                     else:   # Терминал успешно взломан
                         self.db_parameters["isHacked"] = True
                         self.update_DB_parameters()
@@ -546,6 +553,7 @@ class f3_term_curses:
         out_txt_list = out_txt_str.split('\n')
         read_text_pad = curses.newpad(int(len(out_txt_list)/20 + 1)*20, 80)
         for str in out_txt_list:
+            str=str.strip('\n\r\t')
             read_text_pad.addstr(str+'\n', curses.color_pair(1)|curses.A_BOLD)
         read_text_pad.refresh(0, 0, 4, 0, 23, 78)
         curses.curs_set(0)
